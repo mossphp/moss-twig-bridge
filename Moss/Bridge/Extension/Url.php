@@ -16,7 +16,7 @@ class Url extends \Twig_Extension
 
     protected $router;
 
-    public function __construct(\Moss\http\router\Router $router)
+    public function __construct(\Moss\Http\Router\RouterInterface $router)
     {
         $this->router = & $router;
     }

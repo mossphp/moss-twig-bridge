@@ -11,7 +11,7 @@
 
 namespace Moss\Bridge\Loader;
 
-class File implements Twig_LoaderInterface {
+class File implements \Twig_LoaderInterface {
 
 	protected $pattern;
 
@@ -38,7 +38,7 @@ class File implements Twig_LoaderInterface {
 		$r = array();
 		foreach(array('bundle', 'directory', 'file') as $k) {
 			if(empty($matches[0][$k])) {
-				throw new Twig_Error_Loader(sprintf('Invalid or missing "%s" node in view filename "%s"', $k, $name));
+				throw new \Twig_Error_Loader(sprintf('Invalid or missing "%s" node in view filename "%s"', $k, $name));
 			}
 
 			$r['{' . $k .'}'] = str_replace(':', '\\', $matches[0][$k]);
@@ -48,7 +48,7 @@ class File implements Twig_LoaderInterface {
 		$file = str_replace(array('\\', '_', '//'), '/', $file);
 
 		if(!is_file($file)) {
-			throw new Twig_Error_Loader(sprintf('Unable to load template file %s (%s)', $name, $file));
+			throw new \Twig_Error_Loader(sprintf('Unable to load template file %s (%s)', $name, $file));
 		}
 
 		return $file;

@@ -11,6 +11,8 @@
 
 namespace Moss\Bridge\Extension;
 
+use Moss\Bridge\TokenParser\Resource as TokenParserResource;
+
 class Resource extends \Twig_Extension
 {
 
@@ -27,13 +29,13 @@ class Resource extends \Twig_Extension
 
         $path = substr($public, 0, strrpos(rtrim($public, '/'), '/'));
         if (!is_dir($path) && !mkdir($path, 0777, true)) {
-            throw new Twig_Error_Runtime('Unable to create public resource directory');
+            throw new \Twig_Error_Runtime('Unable to create public resource directory');
         }
     }
 
     public function getTokenParsers()
     {
-        return array(new Twig_Bridge_TokenParser_Resource());
+        return array(new TokenParserResource());
     }
 
     public function getName()
@@ -74,7 +76,7 @@ class Resource extends \Twig_Extension
         $r = array();
         foreach (array('bundle', 'directory', 'file') as $k) {
             if (empty($matches[0][$k])) {
-                throw new Twig_Error_Loader(sprintf('Invalid or missing "%s" node in view filename "%s"', $k, $identifier));
+                throw new \Twig_Error_Loader(sprintf('Invalid or missing "%s" node in view filename "%s"', $k, $identifier));
             }
 
             if ($k == 'file') {

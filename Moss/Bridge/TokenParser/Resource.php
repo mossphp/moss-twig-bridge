@@ -11,19 +11,22 @@
 
 namespace Moss\Bridge\TokenParser;
 
-class Resource extends Twig_TokenParser
+use Moss\Bridge\Node\Resource as NodeResource;
+
+class Resource extends \Twig_TokenParser
 {
 
-    public function parse(Twig_Token $token)
+    public function parse(\Twig_Token $token)
     {
         $resource = $this->parser
             ->getExpressionParser()
             ->parseExpression();
+
         $this->parser
             ->getStream()
-            ->expect(Twig_Token::BLOCK_END_TYPE);
+            ->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Bridge_Node_Resource($resource, $token->getLine(), $this->getTag());
+        return new NodeResource($resource, $token->getLine(), $this->getTag());
     }
 
     public function getTag()

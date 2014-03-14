@@ -11,7 +11,10 @@
 
 namespace Moss\Bridge\TokenParser;
 
-class TransChoice extends Twig_Bridge_TokenParser_Trans
+use Moss\Bridge\Node\Trans as NodeTrans;
+use Moss\Bridge\TokenParser\Trans as TokenParserTrans;
+
+class TransChoice extends TokenParserTrans
 {
     public function parse(\Twig_Token $token)
     {
@@ -51,7 +54,7 @@ class TransChoice extends Twig_Bridge_TokenParser_Trans
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Bridge_Node_Trans($body, $count, $vars, $locale, $lineno, $this->getTag());
+        return new NodeTrans($body, $count, $vars, $locale, $lineno, $this->getTag());
     }
 
     public function decideTransChoiceFork($token)

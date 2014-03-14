@@ -11,7 +11,7 @@
 
 namespace Moss\Bridge\Loader;
 
-class String implements Twig_LoaderInterface
+class String implements \Twig_LoaderInterface
 {
     public function getSource($name)
     {

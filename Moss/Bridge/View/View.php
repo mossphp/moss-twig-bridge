@@ -11,6 +11,8 @@
 
 namespace Moss\Bridge\View;
 
+use Moss\View\ViewInterface;
+
 /**
  * Moss view
  * Uses Twig as template engine

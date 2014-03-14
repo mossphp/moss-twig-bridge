@@ -11,15 +11,20 @@
 
 namespace Moss\Bridge\Extension;
 
+use Moss\Bridge\Loader\String;
+use Moss\Bridge\TokenParser\Trans as TokenParserTrans;
+use Moss\Bridge\TokenParser\TransChoice  as TokenParserTransChoice;
+use Moss\Locale\LocaleInterface;
+
 class Trans extends \Twig_Extension
 {
     private $translator;
     private $stringLoader;
 
-    public function __construct(Twig_Bridge_Extension_TransInterface $translator = null)
+    public function __construct(LocaleInterface $translator = null)
     {
         $this->translator = $translator;
-        $this->stringLoader = new Twig_Bridge_Loader_String();
+        $this->stringLoader = new String();
     }
 
     public function getFilters()
@@ -34,7 +39,7 @@ class Trans extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'string' => new Twig_SimpleFunction('string', array($this, 'fromString'), array('needs_environment' => true)),
+            'string' => new \Twig_SimpleFunction('string', array($this, 'fromString'), array('needs_environment' => true)),
         );
     }
 
@@ -43,12 +48,12 @@ class Trans extends \Twig_Extension
         return array(
             // {% trans "Symfony ain't that great!" %}
             // {% trans %}Symfony ain't that great!{% endtrans %}
-            new Twig_Bridge_TokenParser_Trans(),
+            new TokenParserTrans(),
 
             // {% transchoice count %}
             //      '{0} There are no apples|{1} There is one apple|]1,19] There are %count% apples|[20,Inf] There are many apples'
             // {% endtranschoice %}
-            new Twig_Bridge_TokenParser_TransChoice(),
+            new TokenParserTransChoice(),
         );
     }
 
@@ -75,7 +80,7 @@ class Trans extends \Twig_Extension
         return 'translator';
     }
 
-    public function fromString(Twig_Environment $env, $template)
+    public function fromString(\Twig_Environment $env, $template)
     {
         $current = array(
             'cache' => $env->getCache(),
@@ -92,7 +97,7 @@ class Trans extends \Twig_Extension
             $env->setLoader($current['loader']);
 
             return $template;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $env->setCache($current['cache']);
             $env->setLoader($current['loader']);
 

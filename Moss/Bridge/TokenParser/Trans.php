@@ -11,7 +11,9 @@
 
 namespace Moss\Bridge\TokenParser;
 
-class Trans extends Twig_TokenParser
+use Moss\Bridge\Node\Trans as NodeTrans;
+
+class Trans extends \Twig_TokenParser
 {
     public function parse(\Twig_Token $token)
     {
@@ -38,7 +40,7 @@ class Trans extends Twig_TokenParser
                     ->parseExpression();
             }
 
-            if(!$stream->test(Twig_Token::BLOCK_END_TYPE)) {
+            if(!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
                 $body = $this->parser
                     ->getExpressionParser()
                     ->parseExpression();
@@ -50,7 +52,7 @@ class Trans extends Twig_TokenParser
         // {% trans "message" %}
         if($body) {
             $this->assertBody($body);
-            return new Twig_Bridge_Node_Trans($body, null, $vars, $locale, $lineno, $this->getTag());
+            return new NodeTrans($body, null, $vars, $locale, $lineno, $this->getTag());
         }
 
         // {% trans %}message{% endtrans %}
@@ -61,7 +63,7 @@ class Trans extends Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Bridge_Node_Trans($body, null, $vars, $locale, $lineno, $this->getTag());
+        return new NodeTrans($body, null, $vars, $locale, $lineno, $this->getTag());
     }
 
     public function assertBody($body) {

@@ -11,15 +11,15 @@
 
 namespace Moss\Bridge\Node;
 
-class Resource extends Twig_Node implements Twig_NodeOutputInterface
+class Resource extends \Twig_Node implements \Twig_NodeOutputInterface
 {
 
-    public function __construct(Twig_Node_Expression $resource, $lineno, $tag = null)
+    public function __construct(\Twig_Node_Expression $resource, $lineno, $tag = null)
     {
         parent::__construct(array('resource' => $resource), array(), $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
         $compiler
