@@ -1,6 +1,6 @@
 {
 	"name": "moss/bridge",
-	"version": "1",
+	"version": "1.0",
 	"description": "moss-twig bridge",
 	"keywords": ["moss", "twig", "bridge"],
 	"type": "bridge",
@@ -21,8 +21,6 @@
 	],
 	"require": {
 		"php": ">=5.3.4",
-		"twig/twig": "1.*",
-		"twig/extensions": "1.0.x-dev",
 		"moss/locale": "*"
 	},
 	"autoload": {
