@@ -23,7 +23,7 @@
 		"php": ">=5.3.4",
 		"twig/twig": "1.*",
 		"twig/extensions": "1.0.x-dev",
-		"moss/locale": "1.0.x-dev"
+		"moss/locale": "*"
 	},
 	"autoload": {
 		"psr-0": {
