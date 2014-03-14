@@ -1,0 +1,33 @@
+{
+	"name": "moss/bridge",
+	"version": "1",
+	"description": "moss-twig bridge",
+	"keywords": ["moss", "twig", "bridge"],
+	"type": "bridge",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Wachowski",
+			"email": "wachowski.michal@gmail.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/potfur/moss-locale"
+		}
+	],
+	"require": {
+		"php": ">=5.3.4",
+		"twig/twig": "1.*",
+		"twig/extensions": "1.0.x-dev",
+		"moss/locale": "1.0.x-dev"
+	},
+	"autoload": {
+		"psr-0": {
+			"Moss\\Bridge\\": ""
+		}
+	}
+}
