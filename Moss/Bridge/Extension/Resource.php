@@ -21,7 +21,7 @@ class Resource extends \Twig_Extension
     protected $bundle;
     protected $resources = array();
 
-    public function __construct($forceCopy = false, $public = './resource/{bundle}/', $bundle = '../src/{bundle}/resource/')
+    public function __construct($forceCopy = false, $public = './resource/{bundle}/', $bundle = '../src/{bundle}/Resource/')
     {
         $this->forceCopy = (bool) $forceCopy;
         $this->public = $public;
