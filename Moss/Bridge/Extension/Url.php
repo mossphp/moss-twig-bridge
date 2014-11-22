@@ -37,6 +37,6 @@ class Url extends \Twig_Extension
 
     public function getName()
     {
-        return 'url';
+        return 'Url';
     }
 }
