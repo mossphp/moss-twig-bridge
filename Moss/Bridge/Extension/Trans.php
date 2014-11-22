@@ -14,14 +14,14 @@ namespace Moss\Bridge\Extension;
 use Moss\Bridge\Loader\String;
 use Moss\Bridge\TokenParser\Trans as TokenParserTrans;
 use Moss\Bridge\TokenParser\TransChoice  as TokenParserTransChoice;
-use Moss\Locale\LocaleInterface;
+use Moss\Locale\Translator\TranslatorInterface;
 
 class Trans extends \Twig_Extension
 {
     private $translator;
     private $stringLoader;
 
-    public function __construct(LocaleInterface $translator = null)
+    public function __construct(TranslatorInterface $translator = null)
     {
         $this->translator = $translator;
         $this->stringLoader = new String();
@@ -72,12 +72,12 @@ class Trans extends \Twig_Extension
             return strtr($message, $arguments);
         }
 
-        return $this->translator->transChoice($message, $count, array_merge(array('%count%' => $count), $arguments), $locale);
+        return $this->translator->transChoice($message, $count, $arguments, $locale);
     }
 
     public function getName()
     {
-        return 'translator';
+        return 'Translator';
     }
 
     public function fromString(\Twig_Environment $env, $template)

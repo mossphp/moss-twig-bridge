@@ -11,12 +11,14 @@
 
 namespace Moss\Bridge\Extension;
 
+use Moss\Http\Router\RouterInterface;
+
 class Url extends \Twig_Extension
 {
 
     protected $router;
 
-    public function __construct(\Moss\Http\Router\RouterInterface $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = & $router;
     }
@@ -35,6 +37,6 @@ class Url extends \Twig_Extension
 
     public function getName()
     {
-        return 'url';
+        return 'Url';
     }
 }
