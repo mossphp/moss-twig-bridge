@@ -13,17 +13,12 @@
 	],
 	"minimum-stability": "dev",
 	"prefer-stable": true,
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/potfur/moss-locale"
-		}
-	],
 	"require": {
 		"php": ">=5.3.4",
 		"twig/twig": "1.*",
 		"twig/extensions": "1.*",
-		"moss/locale": "*"
+		"moss/moss": "1.*",
+		"moss/locale": "1.*"
 	},
 	"autoload": {
 		"psr-0": {
