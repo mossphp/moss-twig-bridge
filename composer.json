@@ -17,7 +17,7 @@
 		"php": ">=5.3.4",
 		"twig/twig": "1.*",
 		"twig/extensions": "1.*",
-		"moss/moss": "1.*",
+		"moss/framework": "1.*",
 		"moss/locale": "1.*"
 	},
 	"require-dev": {
