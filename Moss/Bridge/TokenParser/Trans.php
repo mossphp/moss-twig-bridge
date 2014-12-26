@@ -40,7 +40,7 @@ class Trans extends \Twig_TokenParser
                     ->parseExpression();
             }
 
-            if(!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
+            if (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
                 $body = $this->parser
                     ->getExpressionParser()
                     ->parseExpression();
@@ -50,8 +50,9 @@ class Trans extends \Twig_TokenParser
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
         // {% trans "message" %}
-        if($body) {
+        if ($body) {
             $this->assertBody($body);
+
             return new NodeTrans($body, null, $vars, $locale, $lineno, $this->getTag());
         }
 
@@ -66,7 +67,8 @@ class Trans extends \Twig_TokenParser
         return new NodeTrans($body, null, $vars, $locale, $lineno, $this->getTag());
     }
 
-    public function assertBody($body) {
+    public function assertBody($body)
+    {
         if (!$body instanceof \Twig_Node_Text && !$body instanceof \Twig_Node_Expression) {
             throw new \Twig_Error_Syntax('A message inside a trans tag must be a simple text');
         }

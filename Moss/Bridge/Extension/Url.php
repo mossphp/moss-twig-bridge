@@ -20,7 +20,7 @@ class Url extends \Twig_Extension
 
     public function __construct(RouterInterface $router)
     {
-        $this->router = & $router;
+        $this->router = $router;
     }
 
     public function getFunctions()
@@ -37,6 +37,6 @@ class Url extends \Twig_Extension
 
     public function getName()
     {
-        return 'Url';
+        return 'url';
     }
 }
