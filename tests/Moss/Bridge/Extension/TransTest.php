@@ -20,7 +20,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
 
         $trans = new Trans($translator);
 
-        $this->assertEquals('Translator', $trans->getName());
+        $this->assertEquals('translator', $trans->getName());
     }
 
     public function testFilters()

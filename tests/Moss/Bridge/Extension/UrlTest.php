@@ -20,7 +20,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
         $url = new Url($router);
 
-        $this->assertEquals('Url', $url->getName());
+        $this->assertEquals('url', $url->getName());
     }
 
     public function testFunctions()

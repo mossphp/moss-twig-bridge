@@ -19,7 +19,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
     {
         $resource = new Resource();
 
-        $this->assertEquals('Resource', $resource->getName());
+        $this->assertEquals('resource', $resource->getName());
     }
 
     public function testTokenParsers()
