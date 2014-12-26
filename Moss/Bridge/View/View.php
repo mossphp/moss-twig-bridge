@@ -36,7 +36,7 @@ class View extends Bag implements ViewInterface
      */
     public function __construct(\Twig_Environment $twig)
     {
-        $this->twig = & $twig;
+        $this->twig = &$twig;
     }
 
     /**

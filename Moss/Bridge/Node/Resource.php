@@ -23,7 +23,7 @@ class Resource extends \Twig_Node implements \Twig_NodeOutputInterface
     {
         $compiler->addDebugInfo($this);
         $compiler
-            ->write('echo $this->env->getExtension(\'Resource\')->build(')
+            ->write('echo $this->env->getExtension(\'resource\')->build(')
             ->subcompile($this->getNode('resource'))
             ->raw(");\n");
     }

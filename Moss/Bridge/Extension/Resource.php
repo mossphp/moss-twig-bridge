@@ -40,7 +40,7 @@ class Resource extends \Twig_Extension
 
     public function getName()
     {
-        return 'Resource';
+        return 'resource';
     }
 
     public function build($resource)

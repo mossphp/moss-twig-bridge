@@ -13,7 +13,7 @@ namespace Moss\Bridge\Extension;
 
 use Moss\Bridge\Loader\String;
 use Moss\Bridge\TokenParser\Trans as TokenParserTrans;
-use Moss\Bridge\TokenParser\TransChoice  as TokenParserTransChoice;
+use Moss\Bridge\TokenParser\TransChoice as TokenParserTransChoice;
 use Moss\Locale\Translator\TranslatorInterface;
 
 class Trans extends \Twig_Extension
@@ -77,7 +77,7 @@ class Trans extends \Twig_Extension
 
     public function getName()
     {
-        return 'Translator';
+        return 'translator';
     }
 
     public function fromString(\Twig_Environment $env, $template)
