@@ -1,5 +1,7 @@
 MOSS Twig bridge
 
+[![Build Status](https://travis-ci.org/potfur/moss-twig-bridge.svg?branch=1.1)](https://travis-ci.org/potfur/moss-twig-bridge)
+
 Adds Twig as template engine with additional functionalities:
 
 __resource__ - simplifies usage of bundle resources, creates symlinks to bundle resources/assets (or if unable, copies them, this can be forced too).
