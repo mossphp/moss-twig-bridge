@@ -15,6 +15,35 @@ use Moss\Bridge\TokenParser\Resource as TokenParserResource;
 
 class ResourceTest extends \PHPUnit_Framework_TestCase
 {
+    private $resource;
+    private $public;
+
+    public function setUp()
+    {
+        $this->tearDown();
+
+        $this->resource = __DIR__ . '/resource/{bundle}/';
+        $this->public = __DIR__ . '/public/{bundle}/';
+
+        $path = strtr($this->resource, ['{bundle}' => 'test']);
+        mkdir($path, 0777, true);
+        file_put_contents($path . 'style.css', '/* nothing here */');
+    }
+
+    public function tearDown()
+    {
+        foreach([__DIR__ . '/resource/', __DIR__ . '/public/'] as $dir) {
+            if(!file_exists($dir)) {
+                continue;
+            }
+
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+                $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+            }
+            rmdir($dir);
+        }
+    }
+
     public function testName()
     {
         $resource = new Resource();
@@ -31,5 +60,55 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         $expected = array(new TokenParserResource());
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testResourceInTwig()
+    {
+        $options = [
+            'debug' => true,
+            'auto_reload' => true,
+            'strict_variables' => false,
+            'cache' => false,
+        ];
+
+        $loader = new \Twig_Loader_Array(
+            [
+                'index.html' => '{% resource \'test:css:style.js\' %}',
+            ]
+        );
+
+        $twig = new \Twig_Environment($loader, $options);
+        $twig->setExtensions(
+            [
+                new Resource(true, $this->public, $this->resource)
+            ]
+        );
+
+        $twig->render('index.html', ['numberOfApples' => 10]);
+    }
+
+    public function mockTwig(TranslatorInterface $translator, $template)
+    {
+        $options = [
+            'debug' => true,
+            'auto_reload' => true,
+            'strict_variables' => false,
+            'cache' => false,
+        ];
+
+        $loader = new \Twig_Loader_Array(
+            [
+                'index.html' => $template,
+            ]
+        );
+
+        $twig = new \Twig_Environment($loader, $options);
+        $twig->setExtensions(
+            [
+                new Trans($translator),
+            ]
+        );
+
+        return $twig;
     }
 }
