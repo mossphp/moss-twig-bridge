@@ -15,16 +15,23 @@ use Moss\Bridge\TokenParser\Resource as TokenParserResource;
 
 class ResourceTest extends \PHPUnit_Framework_TestCase
 {
+    private static $path;
+
     private $resource;
     private $public;
 
-    private $path;
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$path = __DIR__ . '/'.self::rand(8);
+    }
 
     public function setUp()
     {
-        $this->path = __DIR__ . '/'.$this->rand(8);
-        $this->resource = $this->path.'/resource/{bundle}/';
-        $this->public = $this->path.'/public/{bundle}/';
+        $this->tearDown();
+
+        $this->resource = self::$path.'/resource/{bundle}/';
+        $this->public = self::$path.'/public/{bundle}/';
 
         $path = strtr($this->resource, ['{bundle}' => 'test']);
         if(!is_dir($path)) {
@@ -34,7 +41,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         file_put_contents($path . 'style.css', '/* nothing here */');
     }
 
-    protected function rand($len, $chars = '1234567890qwertyuioplkjhgfdsazxcvbnm')
+    protected static function rand($len, $chars = '1234567890qwertyuioplkjhgfdsazxcvbnm')
     {
         $str = '';
         $max = strlen($chars)-1;
@@ -48,15 +55,15 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if(!file_exists($this->path)) {
+        if(!file_exists(self::$path)) {
             return;
         }
 
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(self::$path, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
             $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
         }
 
-        rmdir($this->path);
+        rmdir(self::$path);
     }
 
     public function testName()
