@@ -26,7 +26,9 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         $this->public = __DIR__ . '/public/{bundle}/';
 
         $path = strtr($this->resource, ['{bundle}' => 'test']);
-        mkdir($path, 0777, true);
+        if(!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
         file_put_contents($path . 'style.css', '/* nothing here */');
     }
 
