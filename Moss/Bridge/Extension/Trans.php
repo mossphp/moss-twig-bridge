@@ -65,7 +65,7 @@ class Trans extends \Twig_Extension
             return strtr($message, $arguments);
         }
 
-        return $this->translator->trans($message, $arguments, $locale);
+        return $this->translator->translate($message, $arguments, $locale);
     }
 
     public function transchoice($message, $count, array $arguments = array(), $locale = null)
@@ -76,7 +76,7 @@ class Trans extends \Twig_Extension
             return strtr($message, $arguments);
         }
 
-        return $this->translator->transChoice($message, $count, $arguments, $locale);
+        return $this->translator->translatePlural($message, $count, $arguments, $locale);
     }
 
     protected function preparePlaceholders(array $placeholders)

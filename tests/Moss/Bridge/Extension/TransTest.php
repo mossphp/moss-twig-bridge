@@ -59,7 +59,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
     {
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->once())
-            ->method('trans')
+            ->method('translate')
             ->with('lorem ipsum', array('%foo%' => 'bar'), 'en');
 
         $trans = new Trans($translator);
@@ -70,7 +70,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
     {
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->once())
-            ->method('transChoice')
+            ->method('translatePlural')
             ->with('lorem ipsum', 10, array('%foo%' => 'bar'), 'en');
 
         $trans = new Trans($translator);
