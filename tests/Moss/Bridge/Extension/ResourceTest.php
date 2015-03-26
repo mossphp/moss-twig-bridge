@@ -22,8 +22,6 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->tearDown();
-
         $this->path = __DIR__ . '/'.$this->rand(8);
         $this->resource = $this->path.'/resource/{bundle}/';
         $this->public = $this->path.'/public/{bundle}/';
