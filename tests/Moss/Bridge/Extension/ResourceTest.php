@@ -88,44 +88,11 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
             'cache' => false,
         ];
 
-        $loader = new \Twig_Loader_Array(
-            [
-                'index.html' => '{% resource \'test:css:style.js\' %}',
-            ]
-        );
+        $loader = new \Twig_Loader_Array(['index.html' => '{% resource \'test:css:style.js\' %}']);
 
         $twig = new \Twig_Environment($loader, $options);
-        $twig->setExtensions(
-            [
-                new Resource(true, $this->public, $this->resource)
-            ]
-        );
+        $twig->setExtensions([new Resource(true, $this->public, $this->resource)]);
 
         $twig->render('index.html', ['numberOfApples' => 10]);
-    }
-
-    public function mockTwig(TranslatorInterface $translator, $template)
-    {
-        $options = [
-            'debug' => true,
-            'auto_reload' => true,
-            'strict_variables' => false,
-            'cache' => false,
-        ];
-
-        $loader = new \Twig_Loader_Array(
-            [
-                'index.html' => $template,
-            ]
-        );
-
-        $twig = new \Twig_Environment($loader, $options);
-        $twig->setExtensions(
-            [
-                new Trans($translator),
-            ]
-        );
-
-        return $twig;
     }
 }
