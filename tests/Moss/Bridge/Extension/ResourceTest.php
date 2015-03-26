@@ -18,32 +18,47 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
     private $resource;
     private $public;
 
+    private $path;
+
     public function setUp()
     {
         $this->tearDown();
 
-        $this->resource = __DIR__ . '/resource/{bundle}/';
-        $this->public = __DIR__ . '/public/{bundle}/';
+        $this->path = __DIR__ . '/'.$this->rand(4);
+        $this->resource = $this->path.'/resource/{bundle}/';
+        $this->public = $this->path.'/public/{bundle}/';
 
         $path = strtr($this->resource, ['{bundle}' => 'test']);
         if(!is_dir($path)) {
             mkdir($path, 0777, true);
         }
+
         file_put_contents($path . 'style.css', '/* nothing here */');
+    }
+
+    protected function rand($len, $chars = '1234567890qwertyuioplkjhgfdsazxcvbnm')
+    {
+        $str = '';
+        $max = strlen($chars)-1;
+        while($len--) {
+            $i = rand(0, $max);
+            $str .= $chars[$i];
+        }
+
+        return $str;
     }
 
     public function tearDown()
     {
-        foreach([__DIR__ . '/resource/', __DIR__ . '/public/'] as $dir) {
-            if(!file_exists($dir)) {
-                continue;
-            }
-
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
-                $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
-            }
-            rmdir($dir);
+        if(!file_exists($this->path)) {
+            return;
         }
+
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+            $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+        }
+
+        rmdir($this->path);
     }
 
     public function testName()
