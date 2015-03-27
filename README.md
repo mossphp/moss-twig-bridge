@@ -30,6 +30,16 @@ __localisation__ - localisation/translation module, merging functionality from T
 ```
 `with {....}` and `into "pl"` parts are optional and can be ommited
 
+__formatting__ - for formatting values to their country specific formats
+
+```php
+{{ $value|number }} - formats $value as number
+{{ $value|currency }} - formats $value as currency
+{{ $value|time }} - formats $value (which must be a \DateTime object) as time
+{{ $value|date }} - formats $value (\DateTime object) as date
+{{ $value|dateTime }} - formats $value (\DateTime object) as date time
+```
+
 And of course, normal Twig extensions are also included.
 
 To use it, just replace default `view` component in bootstrap with:
@@ -63,16 +73,5 @@ To use it, just replace default `view` component in bootstrap with:
 	            }
 	    )
 ```
-
-__formatting__ - for formatting values to their country specific formats
-
-```php
-{{ $value|number }} - formats $value as number
-{{ $value|currency }} - formats $value as currency
-{{ $value|time }} - formats $value (which must be a \DateTime object) as time
-{{ $value|date }} - formats $value (\DateTime object) as date
-{{ $value|dateTime }} - formats $value (\DateTime object) as date time
-```
-
 
 For licence details see LICENCE.md
