@@ -47,4 +47,36 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $url = new Url($router);
         $url->url('foo:bar', array('foo' => 'bar'));
     }
+
+    public function testInTwig()
+    {
+        $router = $this->getMock('\Moss\Http\Router\RouterInterface');
+        $router->expects($this->any())
+            ->method('make')
+            ->will($this->returnValue('http://test.com/foobar/?foo=bar'));
+
+        $options = [
+            'debug' => true,
+            'auto_reload' => true,
+            'strict_variables' => false,
+            'cache' => false,
+        ];
+
+        $loader = new \Twig_Loader_Array(
+            [
+                'index.html' => '{{ url(\'foo:bar\', {\'foo\': \'bar\'}) }}',
+            ]
+        );
+
+        $twig = new \Twig_Environment($loader, $options);
+        $twig->setExtensions(
+            [
+                new \Moss\Bridge\Extension\Url($router),
+            ]
+        );
+
+        $result = $twig->render('index.html');
+
+        $this->assertEquals('http://test.com/foobar/?foo=bar', $result);
+    }
 }
