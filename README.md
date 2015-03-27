@@ -1,6 +1,6 @@
 MOSS Twig bridge
 
-[![Build Status](https://travis-ci.org/potfur/moss-twig-bridge.svg?branch=1.1)](https://travis-ci.org/potfur/moss-twig-bridge)
+[![Build Status](https://travis-ci.org/mossphp/moss-twig-bridge.png?branch=master)](https://travis-ci.org/mossphp/moss-twig-bridge)
 
 Adds Twig as template engine with additional functionalities:
 
