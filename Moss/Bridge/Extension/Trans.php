@@ -59,46 +59,20 @@ class Trans extends \Twig_Extension
 
     public function trans($message, array $arguments = array(), $locale = null)
     {
-        $arguments = $this->preparePlaceholders($arguments);
-
         if (!$this->translator) {
             return strtr($message, $arguments);
         }
 
-        return $this->translator->translate($message, $arguments, $locale);
+        return $this->translator->trans($message, $arguments, $locale);
     }
 
     public function transchoice($message, $count, array $arguments = array(), $locale = null)
     {
-        $arguments = $this->preparePlaceholders($arguments);
-
         if (!$this->translator) {
             return strtr($message, $arguments);
         }
 
-        return $this->translator->translatePlural($message, $count, $arguments, $locale);
-    }
-
-    protected function preparePlaceholders(array $placeholders)
-    {
-        if (empty($placeholders)) {
-            return array();
-        }
-
-        $keys = array_keys($placeholders);
-
-        array_walk(
-            $keys,
-            function (&$key) {
-                if (substr($key, 0, 1) === '%' && substr($key, -1, 1) === '%') {
-                    return;
-                }
-
-                $key = '%' . $key . '%';
-            }
-        );
-
-        return array_combine($keys, array_values($placeholders));
+        return $this->translator->transChoice($message, $count, $arguments, $locale);
     }
 
     public function getName()

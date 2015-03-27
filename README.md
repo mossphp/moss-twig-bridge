@@ -1,7 +1,5 @@
 MOSS Twig bridge
 
-[![Build Status](https://travis-ci.org/potfur/moss-twig-bridge.svg?branch=1.1)](https://travis-ci.org/potfur/moss-twig-bridge)
-
 Adds Twig as template engine with additional functionalities:
 
 __resource__ - simplifies usage of bundle resources, creates symlinks to bundle resources/assets (or if unable, copies them, this can be forced too).
@@ -62,16 +60,6 @@ To use it, just replace default `view` component in bootstrap with:
 	                return $view;
 	            }
 	    )
-```
-
-__formatting__ - for formatting values to their country specific formats
-
-```php
-{{ $value|number }} - formats $value as number
-{{ $value|currency }} - formats $value as currency
-{{ $value|time }} - formats $value (which must be a \DateTime object) as time
-{{ $value|date }} - formats $value (\DateTime object) as date
-{{ $value|dateTime }} - formats $value (\DateTime object) as date time
 ```
 
 
