@@ -1,6 +1,8 @@
 MOSS Twig bridge
 
 [![Build Status](https://travis-ci.org/mossphp/moss-twig-bridge.png?branch=master)](https://travis-ci.org/mossphp/moss-twig-bridge)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mossphp/moss-twig-bridge/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mossphp/moss-twig-bridge/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/mossphp/moss-twig-bridge/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/mossphp/moss-twig-bridge/?branch=master)
 
 Adds Twig as template engine with additional functionalities:
 
