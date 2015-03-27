@@ -64,5 +64,15 @@ To use it, just replace default `view` component in bootstrap with:
 	    )
 ```
 
+__formatting__ - for formatting values to their country specific formats
+
+```php
+{{ $value|number }} - formats $value as number
+{{ $value|currency }} - formats $value as currency
+{{ $value|time }} - formats $value (which must be a \DateTime object) as time
+{{ $value|date }} - formats $value (\DateTime object) as date
+{{ $value|dateTime }} - formats $value (\DateTime object) as date time
+```
+
 
 For licence details see LICENCE.md
