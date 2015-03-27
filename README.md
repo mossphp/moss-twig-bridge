@@ -15,7 +15,7 @@ __resource__ - simplifies usage of bundle resources, creates symlinks to bundle 
 Will create symlink to `./src/app/front/resource/js/jquery.min.js` from `./web/resource/app/front/js/jquery.min.js`.
 Same applies to other files, as long as they are placed in bundles resource directory.
 
-__url__ - convenient router wrapper - `{{ url('routeName', { with: 'attributes' }) }}) }}` or `{{ url('controller:identifier:', { with: 'attributes' }) }}`
+__url__ - convenient router wrapper - `{{ url('routeName', { here: "be", some: 'attributes' }) }}`.
 
 __localisation__ - localisation/translation module, merging functionality from Twigs i18n extension and more sophisticated Pluralization from `Sf2 Translator`.
 
