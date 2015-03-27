@@ -57,7 +57,6 @@ class Trans extends \Twig_Node
         }
 
         if ($this->getNode('locale') !== null) {
-            $compiler->raw(', ');
             $compiler
                 ->raw(', ')
                 ->subcompile($this->getNode('locale'));
