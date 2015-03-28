@@ -23,18 +23,32 @@ class Url extends \Twig_Extension
         $this->router = $router;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFunctions()
     {
-        return array(
-            'url' => new \Twig_Function_Method($this, 'url'),
-        );
+        return [
+            'url' => new \Twig_SimpleFunction('url', [$this, 'url'], ['is_safe' => ['html']]),
+        ];
     }
 
-    public function url($identifier = null, $arguments = array())
+    /**
+     * Creates url
+     *
+     * @param string  $identifier
+     * @param array $arguments
+     *
+     * @return string
+     */
+    public function url($identifier = null, $arguments = [])
     {
         return $this->router->make($identifier, $arguments);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'url';

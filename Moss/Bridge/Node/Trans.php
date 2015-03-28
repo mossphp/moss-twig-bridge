@@ -13,11 +13,21 @@ namespace Moss\Bridge\Node;
 
 class Trans extends \Twig_Node
 {
-    public function __construct(\Twig_NodeInterface $body, \Twig_Node_Expression $count = null, \Twig_Node_Expression $vars = null, \Twig_Node_Expression $locale = null, $lineno = 0, $tag = null)
+    /**
+     * @param \Twig_NodeInterface   $body
+     * @param \Twig_Node_Expression $count
+     * @param \Twig_Node_Expression $vars
+     * @param int                   $lineno
+     * @param null|string           $tag
+     */
+    public function __construct(\Twig_NodeInterface $body, \Twig_Node_Expression $count = null, \Twig_Node_Expression $vars = null, $lineno = 0, $tag = null)
     {
-        parent::__construct(array('count' => $count, 'body' => $body, 'vars' => $vars, 'locale' => $locale), array(), $lineno, $tag);
+        parent::__construct(array('count' => $count, 'body' => $body, 'vars' => $vars), array(), $lineno, $tag);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function compile(\Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
@@ -54,13 +64,6 @@ class Trans extends \Twig_Node
                 ->raw(')');
         } else {
             $compiler->subcompile($defaults);
-        }
-
-        if ($this->getNode('locale') !== null) {
-            $compiler->raw(', ');
-            $compiler
-                ->raw(', ')
-                ->subcompile($this->getNode('locale'));
         }
 
         $compiler->raw(");\n");

@@ -11,7 +11,6 @@
 
 namespace Moss\Bridge\Extension;
 
-use Moss\Bridge\Loader\String;
 use Moss\Bridge\TokenParser\Trans as TokenParserTrans;
 use Moss\Bridge\TokenParser\TransChoice as TokenParserTransChoice;
 use Moss\Locale\Translator\TranslatorInterface;
@@ -19,30 +18,27 @@ use Moss\Locale\Translator\TranslatorInterface;
 class Trans extends \Twig_Extension
 {
     private $translator;
-    private $stringLoader;
 
     public function __construct(TranslatorInterface $translator = null)
     {
         $this->translator = $translator;
-        $this->stringLoader = new String();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFilters()
     {
-        return array(
-            'trans' => new \Twig_Filter_Method($this, 'trans'),
-            'translate' => new \Twig_Filter_Method($this, 'trans'),
-            'transchoice' => new \Twig_Filter_Method($this, 'transchoice'),
-        );
+        return [
+            'trans' => new \Twig_SimpleFilter('trans', [$this, 'trans']),
+            'translate' => new \Twig_SimpleFilter('translate', [$this, 'trans']),
+            'transChoice' => new \Twig_SimpleFilter('transChoice', [$this, 'transChoice']),
+        ];
     }
 
-    public function getFunctions()
-    {
-        return array(
-            'string' => new \Twig_SimpleFunction('string', array($this, 'fromString'), array('needs_environment' => true)),
-        );
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getTokenParsers()
     {
         return array(
@@ -57,62 +53,38 @@ class Trans extends \Twig_Extension
         );
     }
 
-    public function trans($message, array $arguments = array(), $locale = null)
+    /**
+     * Translates singular text
+     *
+     * @param string $message
+     * @param array  $arguments
+     *
+     * @return string
+     */
+    public function trans($message, array $arguments = array())
     {
-        if (!$this->translator) {
-            return strtr($message, $arguments);
-        }
-
-        return $this->translator->trans($message, $arguments, $locale);
+        return !$this->translator ? strtr($message, $arguments) : $this->translator->trans($message, $arguments);
     }
 
-    public function transchoice($message, $count, array $arguments = array(), $locale = null)
+    /**
+     * Translates plural text
+     *
+     * @param string $message
+     * @param string $count
+     * @param array  $arguments
+     *
+     * @return string
+     */
+    public function transChoice($message, $count, array $arguments = array())
     {
-        if (!$this->translator) {
-            return strtr($message, $arguments);
-        }
-
-        return $this->translator->transChoice($message, $count, $arguments, $locale);
+        return !$this->translator ? strtr($message, $arguments) : $this->translator->transChoice($message, $count, $arguments);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'translator';
-    }
-
-    public function fromString(\Twig_Environment $env, $template)
-    {
-        $current = array(
-            'cache' => $env->getCache(),
-            'loader' => $env->getLoader()
-        );
-
-        $env->setCache(false);
-        $env->setLoader($this->stringLoader);
-
-        try {
-            $template = $env->loadTemplate($this->escape($template));
-
-            $env->setCache($current['cache']);
-            $env->setLoader($current['loader']);
-
-            return $template;
-        } catch (\Exception $e) {
-            $env->setCache($current['cache']);
-            $env->setLoader($current['loader']);
-
-            throw $e;
-        }
-    }
-
-    protected function escape($string)
-    {
-        return preg_replace_callback(
-            '/({% +trans +[\'"])(.*)([\'"] +%})/i',
-            function ($match) {
-                return $match[1] . preg_replace('/\\\\*[\'"]/im', '&quote;', $match[2]) . $match[3];
-            },
-            $string
-        );
     }
 }

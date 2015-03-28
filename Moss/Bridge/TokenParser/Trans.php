@@ -15,6 +15,9 @@ use Moss\Bridge\Node\Trans as NodeTrans;
 
 class Trans extends \Twig_TokenParser
 {
+    /**
+     * {@inheritdoc}
+     */
     public function parse(\Twig_Token $token)
     {
         $lineno = $token->getLine();
@@ -22,20 +25,12 @@ class Trans extends \Twig_TokenParser
 
         $vars = new \Twig_Node_Expression_Array(array(), $lineno);
         $body = null;
-        $locale = null;
+
         if (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
             if ($stream->test('with')) {
                 // {% trans with vars %}
                 $stream->next();
                 $vars = $this->parser
-                    ->getExpressionParser()
-                    ->parseExpression();
-            }
-
-            if ($stream->test('into')) {
-                // {% trans into "fr" %}
-                $stream->next();
-                $locale = $this->parser
                     ->getExpressionParser()
                     ->parseExpression();
             }
@@ -53,7 +48,7 @@ class Trans extends \Twig_TokenParser
         if ($body) {
             $this->assertBody($body);
 
-            return new NodeTrans($body, null, $vars, $locale, $lineno, $this->getTag());
+            return new NodeTrans($body, null, $vars, $lineno, $this->getTag());
         }
 
         // {% trans %}message{% endtrans %}
@@ -64,9 +59,16 @@ class Trans extends \Twig_TokenParser
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        return new NodeTrans($body, null, $vars, $locale, $lineno, $this->getTag());
+        return new NodeTrans($body, null, $vars, $lineno, $this->getTag());
     }
 
+    /**
+     * Asserts if body is instance of Twig_Node_Text
+     *
+     * @param $body
+     *
+     * @throws \Twig_Error_Syntax
+     */
     public function assertBody($body)
     {
         if (!$body instanceof \Twig_Node_Text && !$body instanceof \Twig_Node_Expression) {
@@ -74,11 +76,17 @@ class Trans extends \Twig_TokenParser
         }
     }
 
+    /**
+     * Decides if tag is closed
+     */
     public function decideTransFork($token)
     {
         return $token->test(array('endtrans'));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTag()
     {
         return 'trans';

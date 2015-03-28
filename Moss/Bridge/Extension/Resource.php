@@ -19,43 +19,53 @@ class Resource extends \Twig_Extension
     protected $forceCopy;
     protected $public;
     protected $bundle;
-    protected $resources = array();
+    protected $resources = [];
 
     public function __construct($forceCopy = false, $public = './resource/{bundle}/', $bundle = '../src/{bundle}/Resource/')
     {
         $this->forceCopy = (bool) $forceCopy;
         $this->public = $public;
         $this->bundle = $bundle;
-
-        $path = substr($public, 0, strrpos(rtrim($public, '/'), '/'));
-        if (!is_dir($path) && !mkdir($path, 0777, true)) {
-            throw new \Twig_Error_Runtime('Unable to create public resource directory');
-        }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTokenParsers()
     {
-        return array(new TokenParserResource());
+        return [new TokenParserResource()];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'resource';
     }
 
+    /**
+     * Builds resource copy or creates symlink to it
+     *
+     * @param $resource
+     *
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     */
     public function build($resource)
     {
-        $arr = $this->split($resource);
+        $placeholders = $this->translate($resource);
 
-        $public = strtr($this->public, $arr);
-        $bundle = strtr($this->bundle, $arr);
+        $public = strtr($this->public, $placeholders);
+        $bundle = strtr($this->bundle, $placeholders);
 
         $this->buildDir($public);
 
         if ($this->forceCopy) {
             $this->buildCopy($public, $bundle);
 
-            return $this->buildResourceName($public, $arr['{directory}'], $arr['{file}']);
+            return $this->buildResourceName($public, $placeholders['{directory}'], $placeholders['{file}']);
         }
 
         try {
@@ -66,74 +76,75 @@ class Resource extends \Twig_Extension
 
         $this->resources[] = $bundle;
 
-        return $this->buildResourceName($public, $arr['{directory}'], $arr['{file}']);
+        return $this->buildResourceName($public, $placeholders['{directory}'], $placeholders['{file}']);
     }
 
-    protected function split($identifier)
+    /**
+     * Splits identifier into parts
+     *
+     * @param string $identifier
+     *
+     * @return array
+     * @throws \Twig_Error_Loader
+     */
+    protected function translate($identifier)
     {
-        preg_match_all('/^(?P<bundle>.*):(?P<directory>[^:]+):(?P<file>.+)$/i', $identifier, $matches, PREG_SET_ORDER);
+        preg_match_all('/^(?P<bundle>[^:]+):(?P<directory>[^:]*:)?(?P<file>.+)$/', $identifier, $matches, \PREG_SET_ORDER);
 
-        $r = array();
-        foreach (array('bundle', 'directory', 'file') as $k) {
-            if (empty($matches[0][$k])) {
-                throw new \Twig_Error_Loader(sprintf('Invalid or missing "%s" node in view filename "%s"', $k, $identifier));
+        foreach (['bundle', 'file'] as $offset) {
+            if (empty($matches[0][$offset])) {
+                throw new \Twig_Error_Loader(sprintf('Invalid or missing "%s" node in resource filename "%s"', $offset, $identifier));
             }
-
-            if ($k == 'file') {
-                $r['{' . $k . '}'] = $matches[0][$k];
-                continue;
-            }
-
-            $r['{' . $k . '}'] = str_replace(array('.', ':'), '/', $matches[0][$k]);
         }
 
-        return $r;
+        $placeholders = [
+            '{bundle}' => $matches[0]['bundle'],
+            '{file}' => $matches[0]['file'],
+            '{directory}' => isset($matches[0]['directory']) ? trim(str_replace(':', '\\', $matches[0]['directory']), '\\/') : null,
+        ];
+
+        return $placeholders;
     }
 
+    /**
+     * Builds resource name
+     *
+     * @param string $path
+     * @param string $directory
+     * @param string $file
+     *
+     * @return string
+     */
     protected function buildResourceName($path, $directory, $file)
     {
         return rtrim($path, '/') . '/' . ($directory ? $directory . '/' : null) . $file;
     }
 
     /**
-     * Builds recursively directory structure matching passed path
+     * Builds recursive copy of resource directory or updates existing files.
      *
-     * @param string $directory
+     * @param string $public
+     * @param string $bundle
      *
-     * @throws \RuntimeException
+     * @throws \Twig_Error_Runtime
      */
-    protected function buildDir($directory)
-    {
-        $directory = rtrim(substr($directory, 0, strrpos(rtrim($directory, '/'), '/')), '/') . '/';
-
-        if (is_dir($directory)) {
-            return;
-        }
-
-        if (!mkdir($directory, 0777, true)) {
-            throw new \RuntimeException(sprintf('Unable to create directory for resource %s', $directory));
-        }
-    }
-
     protected function buildCopy($public, $bundle)
     {
-        $it = new \RecursiveDirectoryIterator($bundle);
-        $files = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::SELF_FIRST);
+        $iterator = new \RecursiveDirectoryIterator($bundle);
+        $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
 
-        $l = strlen($bundle);
+        $length = strlen($bundle);
 
-        /** @var $file \SplFileInfo */
+        /** @var $files \SplFileInfo[] */
         foreach ($files as $file) {
-            $target = $public . str_replace('\\', '/', substr($file->getPathname(), $l));
+            if ($this->isDot($file)) {
+                continue;
+            }
+
+            $target = $public . str_replace('\\', '/', substr($file->getPathname(), $length));
 
             if ($file->isDir()) {
-                if (is_dir($target)) {
-                    continue;
-                }
-
-                if (!mkdir($target, 0777, true)) {
-                    throw new \Twig_Error_Runtime(sprintf('Unable to create directory for resource %s', $target));
-                }
+                $this->buildDir($target);
                 continue;
             }
 
@@ -147,6 +158,56 @@ class Resource extends \Twig_Extension
         }
     }
 
+    /**
+     * Returns true if directory is dot
+     *
+     * @param \SplFileInfo $file
+     *
+     * @return bool
+     */
+    protected function isDot(\SplFileInfo $file)
+    {
+        return $file->getBasename() === '.' || $file->getBasename() === '..';
+    }
+
+    /**
+     * Cuts filename from path
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    protected function cutFileName($path)
+    {
+        return rtrim(substr($path, 0, strrpos(rtrim($path, '/'), '/')), '/') . '/';
+    }
+
+    /**
+     * Builds recursively directory structure matching passed path
+     *
+     * @param string $directory
+     *
+     * @throws \RuntimeException
+     */
+    protected function buildDir($directory)
+    {
+        if (is_dir($directory)) {
+            return;
+        }
+
+        if (!mkdir($directory, 0777, true)) {
+            throw new \RuntimeException(sprintf('Unable to create directory for resource %s', $directory));
+        }
+    }
+
+    /**
+     * Creates symlink to resource directory
+     *
+     * @param string $public
+     * @param string $bundle
+     *
+     * @throws \Twig_Error_Runtime
+     */
     protected function buildLink($public, $bundle)
     {
         if (file_exists($public)) {
