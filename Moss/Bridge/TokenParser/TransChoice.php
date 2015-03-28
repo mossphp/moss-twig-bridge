@@ -16,6 +16,9 @@ use Moss\Bridge\TokenParser\Trans as TokenParserTrans;
 
 class TransChoice extends TokenParserTrans
 {
+    /**
+     * {@inheritdoc}
+     */
     public function parse(\Twig_Token $token)
     {
         $lineno = $token->getLine();
@@ -46,11 +49,21 @@ class TransChoice extends TokenParserTrans
         return new NodeTrans($body, $count, $vars, $lineno, $this->getTag());
     }
 
+    /**
+     * Decides if translation is ended
+     *
+     * @param $token
+     *
+     * @return mixed
+     */
     public function decideTransChoiceFork($token)
     {
         return $token->test(array('endtranschoice'));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTag()
     {
         return 'transchoice';

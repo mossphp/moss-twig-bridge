@@ -15,6 +15,9 @@ use Moss\Bridge\Node\Trans as NodeTrans;
 
 class Trans extends \Twig_TokenParser
 {
+    /**
+     * {@inheritdoc}
+     */
     public function parse(\Twig_Token $token)
     {
         $lineno = $token->getLine();
@@ -59,6 +62,13 @@ class Trans extends \Twig_TokenParser
         return new NodeTrans($body, null, $vars, $lineno, $this->getTag());
     }
 
+    /**
+     * Asserts if body is instance of Twig_Node_Text
+     *
+     * @param $body
+     *
+     * @throws \Twig_Error_Syntax
+     */
     public function assertBody($body)
     {
         if (!$body instanceof \Twig_Node_Text && !$body instanceof \Twig_Node_Expression) {
@@ -66,11 +76,17 @@ class Trans extends \Twig_TokenParser
         }
     }
 
+    /**
+     * Decides if tag is closed
+     */
     public function decideTransFork($token)
     {
         return $token->test(array('endtrans'));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTag()
     {
         return 'trans';

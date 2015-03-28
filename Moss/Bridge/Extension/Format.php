@@ -31,39 +31,77 @@ class Format extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('number', [$this, 'formatNumber']),
-            new \Twig_SimpleFilter('currency', [$this, 'formatCurrency']),
-            new \Twig_SimpleFilter('time', [$this, 'formatTime']),
-            new \Twig_SimpleFilter('date', [$this, 'formatDate']),
-            new \Twig_SimpleFilter('dateTime', [$this, 'formatDateTime']),
+            new \Twig_SimpleFilter('number', [$this, 'formatNumber'], ['is_safe' => []]),
+            new \Twig_SimpleFilter('currency', [$this, 'formatCurrency'], ['is_safe' => []]),
+            new \Twig_SimpleFilter('time', [$this, 'formatTime'], ['is_safe' => []]),
+            new \Twig_SimpleFilter('date', [$this, 'formatDate'], ['is_safe' => []]),
+            new \Twig_SimpleFilter('dateTime', [$this, 'formatDateTime'], ['is_safe' => []]),
         );
     }
 
+    /**
+     * Formats number
+     *
+     * @param int|float $number
+     *
+     * @return string]
+     */
     public function formatNumber($number)
     {
         return $this->formatter->formatNumber($number);
     }
 
+    /**
+     * Formats currency
+     *
+     * @param int $amount
+     *
+     * @return string
+     */
     public function formatCurrency($amount)
     {
         return $this->formatter->formatCurrency($amount);
     }
 
+    /**
+     * Formats time
+     *
+     * @param \DateTime $date
+     *
+     * @return string
+     */
     public function formatTime(\DateTime $date)
     {
         return $this->formatter->formatTime($date);
     }
 
+    /**
+     * Formats date
+     *
+     * @param \DateTime $date
+     *
+     * @return mixed
+     */
     public function formatDate(\DateTime $date)
     {
-        return $this->formatDate($date);
+        return $this->formatter->formatDate($date);
     }
 
+    /**
+     * Formats date time
+     *
+     * @param \DateTime $date
+     *
+     * @return string
+     */
     public function formatDateTime(\DateTime $date)
     {
         return $this->formatter->formatDateTime($date);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'formatter';

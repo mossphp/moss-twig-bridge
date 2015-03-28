@@ -32,25 +32,11 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $trans = new Trans($translator);
         $result = $trans->getFilters();
 
-        $expected = array(
-            'trans' => new \Twig_Filter_Method($trans, 'trans'),
-            'translate' => new \Twig_Filter_Method($trans, 'trans'),
-            'transchoice' => new \Twig_Filter_Method($trans, 'transchoice'),
-        );
-
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testFunctions()
-    {
-        $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
-
-        $trans = new Trans($translator);
-        $result = $trans->getFunctions();
-
-        $expected = array(
-            'string' => new \Twig_SimpleFunction('string', array($trans, 'fromString'), array('needs_environment' => true)),
-        );
+        $expected = [
+            'trans' => new \Twig_SimpleFilter('trans', [$trans, 'trans']),
+            'translate' => new \Twig_SimpleFilter('translate', [$trans, 'trans']),
+            'transChoice' => new \Twig_SimpleFilter('transChoice', [$trans, 'transChoice']),
+        ];
 
         $this->assertEquals($expected, $result);
     }
@@ -60,10 +46,10 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->once())
             ->method('trans')
-            ->with('lorem ipsum', array('foo' => 'bar'), 'en');
+            ->with('lorem ipsum', ['foo' => 'bar']);
 
         $trans = new Trans($translator);
-        $trans->trans('lorem ipsum', array('foo' => 'bar'), 'en');
+        $trans->trans('lorem ipsum', ['foo' => 'bar']);
     }
 
     public function testTransChoice()
@@ -71,10 +57,10 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->once())
             ->method('transChoice')
-            ->with('lorem ipsum', 10, array('foo' => 'bar'), 'en');
+            ->with('lorem ipsum', 10, ['foo' => 'bar']);
 
         $trans = new Trans($translator);
-        $trans->transChoice('lorem ipsum', 10, array('foo' => 'bar'), 'en');
+        $trans->transChoice('lorem ipsum', 10, ['foo' => 'bar']);
     }
 
     public function testShortInlineTransInTwig()
@@ -82,7 +68,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->any())
             ->method('trans')
-            ->with('Hello Michal', [], null);
+            ->with('Hello Michal', []);
 
         $twig = $this->mockTwig($translator, '{% trans \'Hello Michal\' %}');
         $twig->render('index.html');
@@ -104,7 +90,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->any())
             ->method('trans')
-            ->with('Hello Michal', [], 'pl');
+            ->with('Hello Michal', []);
 
         $twig = $this->mockTwig($translator, '{% trans \'Hello Michal\' %}');
         $twig->render('index.html');
@@ -115,7 +101,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->any())
             ->method('trans')
-            ->with('Hello %name%', ['%name%' => 'Michal'], 'pl');
+            ->with('Hello %name%', ['%name%' => 'Michal']);
 
         $twig = $this->mockTwig($translator, '{% trans with {\'%name%\': \'Michal\'} \'Hello %name%\' %}');
         $twig->render('index.html');
@@ -126,7 +112,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
         $translator->expects($this->any())
             ->method('trans')
-            ->with('Hello Michal', [], null);
+            ->with('Hello Michal', []);
 
         $twig = $this->mockTwig($translator, '{% trans %}Hello Michal{% endtrans %}');
         $twig->render('index.html');
@@ -185,7 +171,19 @@ TWIG;
         $twig->render('index.html', ['numberOfApples' => 10]);
     }
 
-    public function mockTwig(TranslatorInterface $translator, $template) {
+    public function testTransFromIncludeLikeString()
+    {
+        $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
+        $translator->expects($this->any())
+            ->method('trans')
+            ->with('Hello Michal');
+
+        $twig = $this->mockTwig($translator, '{% include template_from_string(tplString) %}');
+        $twig->render('index.html', ['tplString' => '{% trans \'Hello Michal\' %}']);
+    }
+
+    public function mockTwig(TranslatorInterface $translator, $template)
+    {
         $options = [
             'debug' => true,
             'auto_reload' => true,
@@ -202,6 +200,7 @@ TWIG;
         $twig = new \Twig_Environment($loader, $options);
         $twig->setExtensions(
             [
+                new \Twig_Extension_StringLoader(),
                 new Trans($translator),
             ]
         );

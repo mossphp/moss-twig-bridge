@@ -27,22 +27,21 @@ class Trans extends \Twig_Extension
         $this->stringLoader = new String();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFilters()
     {
         return [
             'trans' => new \Twig_SimpleFilter('trans', [$this, 'trans']),
             'translate' => new \Twig_SimpleFilter('translate', [$this, 'trans']),
-            'transchoice' => new \Twig_SimpleFilter('transchoice', [$this, 'transchoice']),
+            'transChoice' => new \Twig_SimpleFilter('transChoice', [$this, 'transChoice']),
         ];
     }
 
-    public function getFunctions()
-    {
-        return array(
-            'string' => new \Twig_SimpleFunction('string', [$this, 'fromString'], ['needs_environment' => true]),
-        );
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getTokenParsers()
     {
         return array(
@@ -57,54 +56,38 @@ class Trans extends \Twig_Extension
         );
     }
 
+    /**
+     * Translates singular text
+     *
+     * @param string $message
+     * @param array  $arguments
+     *
+     * @return string
+     */
     public function trans($message, array $arguments = array())
     {
-       return !$this->translator ? strtr($message, $arguments) : $this->translator->trans($message, $arguments);
+        return !$this->translator ? strtr($message, $arguments) : $this->translator->trans($message, $arguments);
     }
 
+    /**
+     * Translates plural text
+     *
+     * @param string $message
+     * @param string $count
+     * @param array  $arguments
+     *
+     * @return string
+     */
     public function transChoice($message, $count, array $arguments = array())
     {
         return !$this->translator ? strtr($message, $arguments) : $this->translator->transChoice($message, $count, $arguments);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'translator';
-    }
-
-    public function fromString(\Twig_Environment $env, $template)
-    {
-        $current = array(
-            'cache' => $env->getCache(),
-            'loader' => $env->getLoader()
-        );
-
-        $env->setCache(false);
-        $env->setLoader($this->stringLoader);
-
-        try {
-            $template = $env->loadTemplate($this->escape($template));
-
-            $env->setCache($current['cache']);
-            $env->setLoader($current['loader']);
-
-            return $template;
-        } catch (\Exception $e) {
-            $env->setCache($current['cache']);
-            $env->setLoader($current['loader']);
-
-            throw $e;
-        }
-    }
-
-    protected function escape($string)
-    {
-        return preg_replace_callback(
-            '/({% +trans +[\'"])(.*)([\'"] +%})/i',
-            function ($match) {
-                return $match[1] . preg_replace('/\\\\*[\'"]/im', '&quote;', $match[2]) . $match[3];
-            },
-            $string
-        );
     }
 }

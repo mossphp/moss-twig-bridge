@@ -13,21 +13,33 @@ namespace Moss\Bridge\Loader;
 
 class String implements \Twig_LoaderInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getSource($name)
     {
         return $name;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function exists($name)
     {
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCacheKey($name)
     {
         return $name;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isFresh($name, $time)
     {
         return true;

@@ -17,7 +17,7 @@ Same applies to other files, as long as they are placed in bundles resource dire
 
 __url__ - convenient router wrapper - `{{ url('routeName', { here: "be", some: 'attributes' }) }}`.
 
-__localisation__ - localisation/translation module, merging functionality from Twigs i18n extension and more sophisticated Pluralization from `Sf2 Translator`.
+__translation__ - translation module, merging functionality from Twigs i18n extension and more sophisticated Pluralization from `Sf2 Translator`.
 
 ```twig
 {% trans with {'%name%': 'Michal'} "Hello %name%" %}

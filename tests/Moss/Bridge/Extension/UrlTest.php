@@ -30,9 +30,9 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $url = new Url($router);
         $result = $url->getFunctions();
 
-        $expected = array(
-            'url' => new \Twig_Function_Method($url, 'url'),
-        );
+        $expected = [
+            'url' => new \Twig_SimpleFunction('url', [$url, 'url'], ['is_safe' => ['html']]),
+        ];
 
         $this->assertEquals($expected, $result);
     }
@@ -42,10 +42,10 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $router = $this->getMock('\Moss\Http\Router\RouterInterface');
         $router->expects($this->once())
             ->method('make')
-            ->with('foo:bar', array('foo' => 'bar'));
+            ->with('foo:bar', ['foo' => 'bar']);
 
         $url = new Url($router);
-        $url->url('foo:bar', array('foo' => 'bar'));
+        $url->url('foo:bar', ['foo' => 'bar']);
     }
 
     public function testInTwig()
@@ -62,18 +62,10 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             'cache' => false,
         ];
 
-        $loader = new \Twig_Loader_Array(
-            [
-                'index.html' => '{{ url(\'foo:bar\', {\'foo\': \'bar\'}) }}',
-            ]
-        );
+        $loader = new \Twig_Loader_Array(['index.html' => '{{ url(\'foo:bar\', {\'foo\': \'bar\'}) }}']);
 
         $twig = new \Twig_Environment($loader, $options);
-        $twig->setExtensions(
-            [
-                new \Moss\Bridge\Extension\Url($router),
-            ]
-        );
+        $twig->setExtensions([ new Url($router) ]);
 
         $result = $twig->render('index.html');
 
