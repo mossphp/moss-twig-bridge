@@ -18,7 +18,7 @@ class Trans extends \Twig_Node
      * @param \Twig_Node_Expression $count
      * @param \Twig_Node_Expression $vars
      * @param int                   $lineno
-     * @param null                  $tag
+     * @param null|string           $tag
      */
     public function __construct(\Twig_NodeInterface $body, \Twig_Node_Expression $count = null, \Twig_Node_Expression $vars = null, $lineno = 0, $tag = null)
     {

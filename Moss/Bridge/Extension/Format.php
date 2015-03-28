@@ -44,7 +44,7 @@ class Format extends \Twig_Extension
      *
      * @param int|float $number
      *
-     * @return string]
+     * @return string
      */
     public function formatNumber($number)
     {
