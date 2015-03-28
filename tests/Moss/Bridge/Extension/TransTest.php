@@ -106,7 +106,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
             ->method('trans')
             ->with('Hello Michal', [], 'pl');
 
-        $twig = $this->mockTwig($translator, '{% trans into \'pl\' \'Hello Michal\' %}');
+        $twig = $this->mockTwig($translator, '{% trans \'Hello Michal\' %}');
         $twig->render('index.html');
     }
 
@@ -117,7 +117,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
             ->method('trans')
             ->with('Hello %name%', ['%name%' => 'Michal'], 'pl');
 
-        $twig = $this->mockTwig($translator, '{% trans with {\'%name%\': \'Michal\'} into \'pl\' \'Hello %name%\' %}');
+        $twig = $this->mockTwig($translator, '{% trans with {\'%name%\': \'Michal\'} \'Hello %name%\' %}');
         $twig->render('index.html');
     }
 
@@ -142,29 +142,6 @@ class TransTest extends \PHPUnit_Framework_TestCase
         $twig = $this->mockTwig($translator, '{% trans with {\'%name%\': \'Michal\'} %}Hello %name%{% endtrans %}');
         $twig->render('index.html');
     }
-
-    public function testBlockTransWithForcedLanguageInTwig()
-    {
-        $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
-        $translator->expects($this->any())
-            ->method('trans')
-            ->with('Hello Michal', [], 'pl');
-
-        $twig = $this->mockTwig($translator, '{% trans into \'pl\' %}Hello Michal{% endtrans %}');
-        $twig->render('index.html');
-    }
-
-    public function testBlockTransWithArgumentsAndLanguageInTwig()
-    {
-        $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
-        $translator->expects($this->any())
-            ->method('trans')
-            ->with('Hello %name%', ['%name%' => 'Michal'], 'pl');
-
-        $twig = $this->mockTwig($translator, '{% trans with {\'%name%\': \'Michal\'} into \'pl\' %}Hello %name%{% endtrans %}');
-        $twig->render('index.html');
-    }
-
 
     public function testTransChoiceInTwig()
     {
@@ -202,50 +179,6 @@ TWIG;
                 '{0} %name%, there are no apples|{1} %name%, there is one apple|]1,Inf] %name%, there are %numberOfApples% apples',
                 10,
                 ['%name%' => 'Michal', '%numberOfApples%' => 10]
-            );
-
-        $twig = $this->mockTwig($translator, $template);
-        $twig->render('index.html', ['numberOfApples' => 10]);
-    }
-
-    public function testTransChoiceWithForcedLanguageInTwig()
-    {
-        $template = <<<'TWIG'
-{% transchoice numberOfApples into "pl" %}
-{0} %name%, there are no apples|{1} %name%, there is one apple|]1,Inf] %name%, there are %numberOfApples% apples
-{% endtranschoice %}
-TWIG;
-
-        $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
-        $translator->expects($this->any())
-            ->method('transChoice')
-            ->with(
-                '{0} %name%, there are no apples|{1} %name%, there is one apple|]1,Inf] %name%, there are %numberOfApples% apples',
-                10,
-                ['%name%' => null, '%numberOfApples%' => 10],
-                'pl'
-            );
-
-        $twig = $this->mockTwig($translator, $template);
-        $twig->render('index.html', ['numberOfApples' => 10]);
-    }
-
-    public function testTransChoiceWithArgumentsAndLanguageInTwig()
-    {
-        $template = <<<'TWIG'
-{% transchoice numberOfApples with {'%name%': 'Michal'} into "pl" %}
-{0} %name%, there are no apples|{1} %name%, there is one apple|]1,Inf] %name%, there are %numberOfApples% apples
-{% endtranschoice %}
-TWIG;
-
-        $translator = $this->getMock('\Moss\Locale\Translator\TranslatorInterface');
-        $translator->expects($this->any())
-            ->method('transChoice')
-            ->with(
-                '{0} %name%, there are no apples|{1} %name%, there is one apple|]1,Inf] %name%, there are %numberOfApples% apples',
-                10,
-                ['%name%' => 'Michal', '%numberOfApples%' => 10],
-                'pl'
             );
 
         $twig = $this->mockTwig($translator, $template);

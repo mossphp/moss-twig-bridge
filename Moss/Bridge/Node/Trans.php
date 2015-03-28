@@ -15,7 +15,7 @@ class Trans extends \Twig_Node
 {
     public function __construct(\Twig_NodeInterface $body, \Twig_Node_Expression $count = null, \Twig_Node_Expression $vars = null, $lineno = 0, $tag = null)
     {
-        parent::__construct(array('count' => $count, 'body' => $body, 'vars' => $vars, 'locale' => $locale), array(), $lineno, $tag);
+        parent::__construct(array('count' => $count, 'body' => $body, 'vars' => $vars), array(), $lineno, $tag);
     }
 
     public function compile(\Twig_Compiler $compiler)
