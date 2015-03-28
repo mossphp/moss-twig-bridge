@@ -27,21 +27,10 @@ class TransChoice extends TokenParserTrans
             ->getExpressionParser()
             ->parseExpression();
 
-        $domain = null;
-        $locale = null;
-
         if ($stream->test('with')) {
             // {% transchoice count with vars %}
             $stream->next();
             $vars = $this->parser
-                ->getExpressionParser()
-                ->parseExpression();
-        }
-
-        if ($stream->test('into')) {
-            // {% transchoice count into "fr" %}
-            $stream->next();
-            $locale = $this->parser
                 ->getExpressionParser()
                 ->parseExpression();
         }
@@ -54,7 +43,7 @@ class TransChoice extends TokenParserTrans
 
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
-        return new NodeTrans($body, $count, $vars, $locale, $lineno, $this->getTag());
+        return new NodeTrans($body, $count, $vars, $lineno, $this->getTag());
     }
 
     public function decideTransChoiceFork($token)

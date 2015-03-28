@@ -26,11 +26,11 @@ class Url extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'url' => new \Twig_Function_Method($this, 'url'),
+            'url' => new \Twig_SimpleFilter('url', [$this, 'url']),
         );
     }
 
-    public function url($identifier = null, $arguments = array())
+    public function url($identifier = null, $arguments = [])
     {
         return $this->router->make($identifier, $arguments);
     }

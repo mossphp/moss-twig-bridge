@@ -74,7 +74,7 @@ class TransTest extends \PHPUnit_Framework_TestCase
             ->with('lorem ipsum', 10, array('foo' => 'bar'), 'en');
 
         $trans = new Trans($translator);
-        $trans->transchoice('lorem ipsum', 10, array('foo' => 'bar'), 'en');
+        $trans->transChoice('lorem ipsum', 10, array('foo' => 'bar'), 'en');
     }
 
     public function testShortInlineTransInTwig()

@@ -20,17 +20,15 @@ __url__ - convenient router wrapper - `{{ url('routeName', { here: "be", some: '
 __localisation__ - localisation/translation module, merging functionality from Twigs i18n extension and more sophisticated Pluralization from `Sf2 Translator`.
 
 ```twig
-{% trans with {'%name%': 'Michal'} into "pl" "Hello %name%" %}
+{% trans with {'%name%': 'Michal'} "Hello %name%" %}
 
 {% trans with {'%name%': 'Michal'} %}Hello %name%{% endtrans %}
 
-{% trans with {'%name%': 'Michal'} into "pl" %}Hello %name%{% endtrans %}
-
-{% transchoice count with {'%name%': 'Michal'} into "pl" %}
+{% transchoice count with {'%name%': 'Michal'} %}
 {0} %name%, there are no apples|{1} %name%, there is one apple|]1,Inf] %name%, there are %count% apples
 {% endtranschoice %}
 ```
-`with {....}` and `into "pl"` parts are optional and can be ommited
+`with {....}` is optional and can be ommited
 
 __formatting__ - for formatting values to their country specific formats
 

@@ -29,17 +29,17 @@ class Trans extends \Twig_Extension
 
     public function getFilters()
     {
-        return array(
-            'trans' => new \Twig_Filter_Method($this, 'trans'),
-            'translate' => new \Twig_Filter_Method($this, 'trans'),
-            'transchoice' => new \Twig_Filter_Method($this, 'transchoice'),
-        );
+        return [
+            'trans' => new \Twig_SimpleFilter('trans', [$this, 'trans']),
+            'translate' => new \Twig_SimpleFilter('translate', [$this, 'trans']),
+            'transchoice' => new \Twig_SimpleFilter('transchoice', [$this, 'transchoice']),
+        ];
     }
 
     public function getFunctions()
     {
         return array(
-            'string' => new \Twig_SimpleFunction('string', array($this, 'fromString'), array('needs_environment' => true)),
+            'string' => new \Twig_SimpleFunction('string', [$this, 'fromString'], ['needs_environment' => true]),
         );
     }
 
@@ -57,22 +57,14 @@ class Trans extends \Twig_Extension
         );
     }
 
-    public function trans($message, array $arguments = array(), $locale = null)
+    public function trans($message, array $arguments = array())
     {
-        if (!$this->translator) {
-            return strtr($message, $arguments);
-        }
-
-        return $this->translator->trans($message, $arguments, $locale);
+       return !$this->translator ? strtr($message, $arguments) : $this->translator->trans($message, $arguments);
     }
 
-    public function transchoice($message, $count, array $arguments = array(), $locale = null)
+    public function transChoice($message, $count, array $arguments = array())
     {
-        if (!$this->translator) {
-            return strtr($message, $arguments);
-        }
-
-        return $this->translator->transChoice($message, $count, $arguments, $locale);
+        return !$this->translator ? strtr($message, $arguments) : $this->translator->transChoice($message, $count, $arguments);
     }
 
     public function getName()
