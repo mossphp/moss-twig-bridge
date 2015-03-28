@@ -16,7 +16,7 @@ class File implements \Twig_LoaderInterface
 
     protected $pattern;
 
-    public function __construct($pattern = '../src/{bundle}/{directory}/View/{file}.twig')
+    public function __construct($pattern)
     {
         $this->pattern = $pattern;
     }
