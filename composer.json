@@ -2,7 +2,7 @@
 	"name": "moss/twig-bridge",
 	"version": "2.0",
 	"description": "moss-twig bridge",
-	"keywords": ["moss", "twig", "bridge"],
+	"keywords": ["mossphp", "twig", "bridge"],
 	"type": "bridge",
 	"license": "MIT",
 	"authors": [
