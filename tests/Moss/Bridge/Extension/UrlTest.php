@@ -30,11 +30,8 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $url = new Url($router);
         $result = $url->getFunctions();
 
-        $expected = [
-            'url' => new \Twig_SimpleFunction('url', [$url, 'url'], ['is_safe' => ['html']]),
-        ];
-
-        $this->assertEquals($expected, $result);
+        $this->assertArrayHasKey('url', $result);
+        $this->assertInstanceOf('\Twig_SimpleFunction', $result['url']);
     }
 
     public function testUrl()
@@ -45,7 +42,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             ->with('foo:bar', ['foo' => 'bar']);
 
         $url = new Url($router);
-        $url->url('foo:bar', ['foo' => 'bar']);
+        $url->make('foo:bar', ['foo' => 'bar']);
     }
 
     public function testInTwig()

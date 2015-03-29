@@ -29,7 +29,7 @@ class Url extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'url' => new \Twig_SimpleFunction('url', [$this, 'url'], ['is_safe' => ['html']]),
+            'url' => new \Twig_SimpleFunction('url', [$this, 'make'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -41,7 +41,7 @@ class Url extends \Twig_Extension
      *
      * @return string
      */
-    public function url($identifier = null, $arguments = [])
+    public function make($identifier = null, $arguments = [])
     {
         return $this->router->make($identifier, $arguments);
     }
