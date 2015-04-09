@@ -9,7 +9,7 @@ Adds Twig as template engine with additional functionalities:
 __resource__ - simplifies usage of bundle resources, creates symlinks to bundle resources/assets (or if unable, copies them, this can be forced too).
 
 ```html
-<script src="{% resource 'app:front:js:jquery.min.js' %}"></script>
+<script src="{{ asset('/js/jquery.min.js') }}"></script>
 ```
 
 Will create symlink to `./src/app/front/resource/js/jquery.min.js` from `./web/resource/app/front/js/jquery.min.js`.
